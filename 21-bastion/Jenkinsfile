@@ -17,7 +17,7 @@ pipeline {
             steps {
                 withAWS(region: 'us-east-1', credentials: 'aws cred') {
                     sh """
-                        cd 11-sg
+                        cd 21-bastion
                         terraform init -reconfigure
                     """
                 }
@@ -27,7 +27,7 @@ pipeline {
             steps {
                 withAWS(region: 'us-east-1', credentials: 'aws cred') {
                     sh """
-                        cd 11-sg
+                        cd 21-bastion
                         terraform plan -out=tfplan
                    """
                 }
@@ -53,38 +53,6 @@ pipeline {
                 }
             }
         }
-        stage('Trigger Destroy VPC') {
-            when {
-                expression { params.ACTION == 'destroy' }
-            }
-            steps {
-                build job: '00-vpc', parameters: [string(name: 'ACTION', value: 'destroy')], wait: false
-            }
-        }
-        stage('Parallel stages (bastion,rds,eks)') {
-            when {
-                expression { params.ACTION == 'apply'}
-            }
-            Parallel {
-                stage ('Bastion'){
-                    steps{
-                        build job: '21-bastion', parameters: [string(name: 'ACTION', value: 'apply')], wait: false
-                    }
-                }
-                stage ('rds'){
-                    steps{
-                        build job: '31-rds', parameters: [string(name: 'ACTION', value: 'apply')], wait: false
-                    }
-                }
-                stage ('eks'){
-                    steps{
-                        build job: '41-eks', parameters: [string(name: 'ACTION', value: 'apply')], wait: false
-                    }
-                }
-            }
-            
-        }
-
     }
 
     post {
