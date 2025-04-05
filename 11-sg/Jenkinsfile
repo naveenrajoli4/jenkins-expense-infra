@@ -1,3 +1,79 @@
 pipeline {
+    agent {
+        label 'agent-1-label'
+    }
+    options{
+        timeout(time: 30, unit: 'MINUTES')
+        disableConcurrentBuilds()
+        ansiColor('xterm')
+    }
+    parameters {
+        choice(name: 'ACTION', choices: ['apply', 'destroy'], description: 'Select action')
+    }
 
+
+    stages {
+        stage('init') {
+            steps {
+                withAWS(region: 'us-east-1', credentials: 'aws cred') {
+                    sh """
+                        cd 11-sg
+                        terraform init -reconfigure
+                    """
+                }
+            }
+        }
+        stage('plan') {
+            steps {
+                withAWS(region: 'us-east-1', credentials: 'aws cred') {
+                    sh """
+                        cd 11-sg
+                        terraform plan -out=tfplan
+                   """
+                }
+            }
+        }
+        stage('apply or destroy') {
+            input {
+                message "Should we continue to ${params.ACTION}"
+                ok "Yes,  ${params.ACTION} "
+            }
+            steps {
+                withAWS(region: 'us-east-1', credentials: 'aws cred') {
+                sh """
+                    cd 11-sg
+                    if [ ${params.ACTION} == 'apply' ]
+                    then
+                        terraform apply -auto-approve tfplan
+                    elif [ ${params.ACTION} == 'destroy' ]
+                    then
+                        terraform destroy -auto-approve
+                    fi
+                """
+                }
+            }
+        }
+        stage('Destroy VPC') {
+            when {
+                expression { params.ACTION == 'destroy' }
+            }
+            steps {
+                build job: 'dev-vpc', parameters: [string(name: 'ACTION', value: 'destroy')], wait: true
+            }
+        }
+
+    }
+
+    post {
+        always{
+            echo 'this will run always'
+            deleteDir()
+        }
+        success{
+            echo 'this will run on success'
+        }
+        failure{
+            echo 'this will run at failure'
+        }
+    }
 }
