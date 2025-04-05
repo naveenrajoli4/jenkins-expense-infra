@@ -23,16 +23,16 @@ pipeline {
                 }
             }
         }
-        stage('plan') {
-            steps {
-                withAWS(region: 'us-east-1', credentials: 'aws-cred') {
-                    sh """
-                        cd 01-vpc
-                        terraform plan -out=tfplan
-                   """
-                }
-            }
-        }
+        // stage('plan') {
+        //     steps {
+        //         withAWS(region: 'us-east-1', credentials: 'aws-cred') {
+        //             sh """
+        //                 cd 01-vpc
+        //                 terraform plan -out=tfplan
+        //            """
+        //         }
+        //     }
+        // }
         // stage('apply or destroy') {
         //     when {
         //         expression {params.ACTION == 'apply'}
