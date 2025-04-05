@@ -53,6 +53,50 @@ pipeline {
                 }
             }
         }
+        stage('Sequential') {
+            when {
+                expression { params.ACTION == 'destroy' }
+            }
+            stages {
+                
+                stage('ecr') {
+                    steps {
+                        build job: '71-ecr', parameters: [string(name: 'ACTION', value: "destroy")], wait: true
+                    }
+                }
+                stage('alb-ingress') {
+                    steps {
+                        build job: '61-ingress-ALB', parameters: [string(name: 'ACTION', value: "destroy")], wait: true
+                    }
+                }
+                stage('acm') {
+                    steps {
+                        build job: '51-acm', parameters: [string(name: 'ACTION', value: "destroy")], wait: true
+                    }
+                }
+                stage('eks') {
+                    steps {
+                        build job: '41-eks', parameters: [string(name: 'ACTION', value: "destroy")], wait: true
+                    }
+                }
+                stage('rds') {
+                    steps {
+                        build job: '31-rds', parameters: [string(name: 'ACTION', value: "destroy")], wait: true
+                    }
+                }
+                stage('bastion') {
+                    steps {
+                        build job: '21-bastion', parameters: [string(name: 'ACTION', value: "destroy")], wait: true
+                    }
+                }
+                stage('sg') {
+                    steps {
+                        build job: '11-sg', parameters: [string(name: 'ACTION', value: "destroy")], wait: true
+                    }
+                }
+
+            }
+        }
     }
 
     post {
