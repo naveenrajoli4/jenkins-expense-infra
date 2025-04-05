@@ -28,7 +28,7 @@ pipeline {
                 withAWS(region: 'us-east-1', credentials: 'aws cred') {
                     sh """
                         cd 21-bastion
-                        terraform plan -out=bastiontfplan
+                        terraform plan -out=tfplan
                    """
                 }
             }
@@ -41,10 +41,10 @@ pipeline {
             steps {
                 withAWS(region: 'us-east-1', credentials: 'aws cred') {
                 sh """
-                    cd 11-sg
+                    cd 21-bastion
                     if [ ${params.ACTION} == 'apply' ]
                     then
-                        terraform apply -auto-approve bastiontfplan
+                        terraform apply -auto-approve tfplan
                     elif [ ${params.ACTION} == 'destroy' ]
                     then
                         terraform destroy -auto-approve
