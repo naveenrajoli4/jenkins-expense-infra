@@ -15,7 +15,7 @@ pipeline {
     stages {
         stage('init') {
             steps {
-                withAWS(region: 'us-east-1', credentials: 'aws cred') {
+                withAWS(region: 'us-east-1', credentials: 'aws-cred') {
                     sh """
                         cd 01-vpc
                         terraform init -reconfigure
@@ -25,7 +25,7 @@ pipeline {
         }
         stage('plan') {
             steps {
-                withAWS(region: 'us-east-1', credentials: 'aws cred') {
+                withAWS(region: 'us-east-1', credentials: 'aws-cred') {
                     sh """
                         cd 01-vpc
                         terraform plan -out=tfplan
@@ -34,12 +34,12 @@ pipeline {
             }
         }
         stage('apply or destroy') {
-            input {
-                message "Should we continue to ${params.ACTION}"
-                ok "Yes,  ${params.ACTION} "
-            }
+            // input {
+            //     message "Should we continue to ${params.ACTION}"
+            //     ok "Yes,  ${params.ACTION} "
+            // }
             steps {
-                withAWS(region: 'us-east-1', credentials: 'aws cred') {
+                withAWS(region: 'us-east-1', credentials: 'aws-cred') {
                 sh """
                     cd 01-vpc
                     if [ ${params.ACTION} == 'apply' ]

@@ -15,7 +15,7 @@ pipeline {
     stages {
         stage('init') {
             steps {
-                withAWS(region: 'us-east-1', credentials: 'aws cred') {
+                withAWS(region: 'us-east-1', credentials: 'aws-cred') {
                     sh """
                         cd 11-sg
                         terraform init -reconfigure
@@ -25,7 +25,7 @@ pipeline {
         }
         stage('plan') {
             steps {
-                withAWS(region: 'us-east-1', credentials: 'aws cred') {
+                withAWS(region: 'us-east-1', credentials: 'aws-cred') {
                     sh """
                         cd 11-sg
                         terraform plan -out=tfplan
@@ -34,12 +34,12 @@ pipeline {
             }
         }
         stage('apply or destroy') {
-            input {
-                message "Should we continue to ${params.ACTION}"
-                ok "Yes,  ${params.ACTION} "
-            }
+            // input {
+            //     message "Should we continue to ${params.ACTION}"
+            //     ok "Yes,  ${params.ACTION} "
+            // }
             steps {
-                withAWS(region: 'us-east-1', credentials: 'aws cred') {
+                withAWS(region: 'us-east-1', credentials: 'aws-cred') {
                 sh """
                     cd 11-sg
                     if [ ${params.ACTION} == 'apply' ]
@@ -83,6 +83,34 @@ pipeline {
                 }
             }
             
+        }
+
+        stage('Sequential') {
+            when {
+                expression { params.ACTION == 'apply' }
+            }
+            stages {
+                stage('acm') {
+                    steps {
+                        build job: '51-acm', parameters: [string(name: 'ACTION', value: 'apply')]
+                    }
+                }
+                stage('ingress-alb') {
+                    steps {
+                        build job: '61-ingress-ALB', parameters: [string(name: 'ACTION', value: 'apply')], wait: false
+                    }
+                }
+                stage('ecr') {
+                    steps {
+                        build job: '71-ecr', parameters: [string(name: 'ACTION', value: 'apply')], wait: false
+                    }
+                }
+                stage('cdn') {
+                    steps {
+                        build job: '81-cdn', parameters: [string(name: 'ACTION', value: 'apply')], wait: false
+                    }
+                }
+            }
         }
 
     }

@@ -3,7 +3,7 @@ pipeline {
         label 'agent-1-label'
     }
     options{
-        timeout(time: 30, unit: 'MINUTES')
+        timeout(time: 50, unit: 'MINUTES')
         disableConcurrentBuilds()
         ansiColor('xterm')
     }
@@ -17,7 +17,7 @@ pipeline {
             steps {
                 withAWS(region: 'us-east-1', credentials: 'aws-cred') {
                     sh """
-                        cd 31-rds
+                        cd 51-acm
                         terraform init -reconfigure
                     """
                 }
@@ -27,7 +27,7 @@ pipeline {
             steps {
                 withAWS(region: 'us-east-1', credentials: 'aws-cred') {
                     sh """
-                        cd 31-rds
+                        cd 51-acm
                         terraform plan -out=tfplan
                    """
                 }
@@ -41,7 +41,7 @@ pipeline {
             steps {
                 withAWS(region: 'us-east-1', credentials: 'aws-cred') {
                 sh """
-                    cd 31-rds
+                    cd 51-acm
                     if [ ${params.ACTION} == 'apply' ]
                     then
                         terraform apply -auto-approve tfplan

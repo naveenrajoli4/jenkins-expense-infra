@@ -1,6 +1,8 @@
 resource "aws_key_pair" "eks" {
   key_name   = "myec2-key-eks"
-  public_key = file("~/.ssh/myec2keyeks.pub")
+  # public_key = file("~/.ssh/myec2keyeks.pub")
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDmU6g4fgS7k/fgrIhOt2+Hdm3Fq1O13K5FA+bRlP4xk4rYmB0lgECz7PZnXsBgbmqUynchJkeHEn3Env5tPWu6Y54I+pFwFDpvl2nqEfrm5GXStNlxNdzt4APVmQQZYxLk/KqT0QFqTPbwDHis3Lf/NKNLute6qn0uxSw6NNQJKxofGpIppgWU0mJK4MHzHMBG+CQSEDN+e2QeHxc4vK44NTdGWrfrXctXKwJl/1J2Q13iqPa+jP/MdH3v2akbebdGSOLhAXym2lB3wbeCI6Sp4CteiVLMQ4N6t33SqqAuv2bE1bCLlJcRpn/je8zrRuplYGOv0xn7HpDWWe2xL1T3
+"
 }
 
 module "eks" {
