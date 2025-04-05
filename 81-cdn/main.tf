@@ -12,7 +12,7 @@ resource "aws_cloudfront_distribution" "expense" {
 
   enabled             = true
 
-  aliases = ["${var.project_name}-cdn.${var.domain_name}"]
+  aliases = ["cdn.${var.domain_name}"]
 
   default_cache_behavior {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
