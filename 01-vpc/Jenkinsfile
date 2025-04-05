@@ -5,7 +5,7 @@ pipeline {
     options{
         timeout(time: 30, unit: 'MINUTES')
         disableConcurrentBuilds()
-        // retry(1)
+        ansiColor('xterm')
     }
     parameters {
         choice(name: 'ACTION', choices: ['apply', 'destroy'], description: 'Select action')
@@ -41,7 +41,7 @@ pipeline {
                     if [ ${params.ACTION} == 'apply' ]
                     then
                         terraform apply -auto-approve tfplan
-                    elif [ ${params.Action} == 'destroy' ]
+                    elif [ ${params.ACTION} == 'destroy' ]
                     then
                         terraform destroy -auto-approve
                     fi
