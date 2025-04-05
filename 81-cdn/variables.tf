@@ -12,7 +12,7 @@ variable "environment" {
 
 
 
-variable "commn_tags" {
+variable "common_tags" {
   default = {
     Owner       = "Naveen Rajoli"
     project     = "expense-app"
