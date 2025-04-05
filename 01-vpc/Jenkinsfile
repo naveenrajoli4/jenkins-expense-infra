@@ -33,16 +33,22 @@ pipeline {
                 }
             }
         }
-        // stage('apply or destroy') {
-        //     when {
-        //         expression {params.ACTION == 'apply'}
-        //     }
-        //     steps {
-        //             sh '''
-                        
-        //             '''
-        //     }
-        // }
+        stage('apply or destroy') {
+            steps {
+                withAWS(region: 'us-east-1', credentials: 'aws cred') {
+                sh """
+                    cd 01-vpc
+                    if [ ${params.ACTION} == 'apply' ]
+                    then
+                        terraform apply -auto-approve tfplan
+                    elif [ ${params.Action} == 'destroy' ]
+                    then
+                        terraform destroy -auto-approve
+                    fi
+                """
+                }
+            }
+        }
 
         // stage('Deploy') {
         //     when {
