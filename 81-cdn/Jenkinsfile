@@ -3,7 +3,7 @@ pipeline {
         label 'agent-1-label'
     }
     options{
-        timeout(time: 50, unit: 'MINUTES')
+        timeout(time: 80, unit: 'MINUTES')
         disableConcurrentBuilds()
         ansiColor('xterm')
     }
