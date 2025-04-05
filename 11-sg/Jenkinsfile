@@ -53,7 +53,7 @@ pipeline {
                 }
             }
         }
-        stage('Destroy VPC') {
+        stage('Trigger Destroy VPC') {
             when {
                 expression { params.ACTION == 'destroy' }
             }
