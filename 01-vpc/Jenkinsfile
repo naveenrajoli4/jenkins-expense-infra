@@ -15,10 +15,12 @@ pipeline {
     stages {
         stage('init') {
             steps {
+                withAWS(region: 'us-east-1', credentials: 'aws-cred') {
                     sh """
                         cd 01-vpc
                         terraform init -reconfigure
                     """
+                }
             }
         }
         stage('plan') {
