@@ -41,7 +41,7 @@ pipeline {
             steps {
                 withAWS(region: 'us-east-1', credentials: 'aws cred') {
                 sh """
-                    cd 11-sg
+                    cd 41-eks
                     if [ ${params.ACTION} == 'apply' ]
                     then
                         terraform apply -auto-approve tfplan
