@@ -55,7 +55,7 @@ aws configure
 ```
 
 ```
-aws eks update-kubeconfig --region us-east-1 --name expense-dev
+aws eks update-kubeconfig --region us-east-1 --name kdp-expense-prod-eks
 ```
 
 ```
@@ -64,7 +64,7 @@ kubectl get nodes
 
 * Create namespace expense
 ```
-kubectl create namespace expense
+kubectl create namespace rnk-expense
 ```
 
 * IAM policy
