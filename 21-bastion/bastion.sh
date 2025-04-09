@@ -3,11 +3,15 @@ ARCH=amd64
 PLATFORM=$(uname -s)_$ARCH
 HOME=/root
 
+
 growpart /dev/nvme0n1 4
-lvextend -l +50%FREE /dev/RootVG/rootVol
-lvextend -l +50%FREE /dev/RootVG/varVol
+lvextend -l +40%FREE /dev/RootVG/rootVol
+lvextend -l +30%FREE /dev/RootVG/varVol
+lvextend -l +30%FREE /dev/RootVG/homeVol
 xfs_growfs /
 xfs_growfs /var
+xfs_growfs /home
+
 
 dnf -y install dnf-plugins-core
 dnf config-manager --add-repo https://download.docker.com/linux/rhel/docker-ce.repo
@@ -41,3 +45,31 @@ curl -sS https://webinstall.dev/k9s | bash
 
 # mysql
 dnf install mysql -y
+
+#for jenkins 
+yum install java-17-openjdk -y
+yum install -y yum-utils
+yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+yum -y install terraform
+dnf module disable nodejs -y
+dnf module enable nodejs:20 -y
+dnf install nodejs -y
+yum install zip -y
+
+# docker
+yum install -y yum-utils
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+systemctl start docker
+systemctl enable docker
+usermod -aG docker ec2-user
+
+# Maven for Java projects
+dnf install maven -y
+
+# Python for python projects
+dnf install python3.11 gcc python3-devel -y
+
+# install Java
+dnf install java-17-openjdk -y
+

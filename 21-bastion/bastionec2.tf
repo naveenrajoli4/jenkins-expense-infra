@@ -8,9 +8,9 @@ resource "aws_instance" "this" {
   root_block_device {
     volume_size = 50  # Set root volume size to 50GB
     volume_type = "gp3"  # Use gp3 for better performance (optional)
+    delete_on_termination = true
   }
   user_data = file("bastion.sh")
-
   tags = merge(
     var.commn_tags,
     {
@@ -19,3 +19,4 @@ resource "aws_instance" "this" {
 
   )
 }
+
