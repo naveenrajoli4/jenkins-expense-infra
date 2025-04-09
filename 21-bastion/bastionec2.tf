@@ -10,7 +10,7 @@ resource "aws_instance" "this" {
     volume_type = "gp3"  # Use gp3 for better performance (optional)
     delete_on_termination = true
   }
-  user_data = file("bastion-agent.sh")
+  user_data = file("jenkins-agent.sh")
   tags = merge(
     var.commn_tags,
     {
