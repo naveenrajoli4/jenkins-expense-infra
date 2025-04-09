@@ -82,7 +82,7 @@ aws iam create-policy \
 * Create Service account. Replace your account ID.
 ```
 eksctl create iamserviceaccount \
---cluster=expense-dev \
+--cluster=kdp-expense-prod-eks \
 --namespace=kube-system \
 --name=aws-load-balancer-controller \
 --attach-policy-arn=arn:aws:iam::315069654700:policy/AWSLoadBalancerControllerIAMPolicy \
