@@ -4,8 +4,8 @@ PLATFORM=$(uname -s)_$ARCH
 HOME=/root
 
 growpart /dev/nvme0n1 4
-lvextend -l +60%FREE /dev/RootVG/rootVol
-lvextend -l +40%FREE /dev/RootVG/varVol
+lvextend -l +40%FREE /dev/RootVG/rootVol
+lvextend -l +30%FREE /dev/RootVG/varVol
 xfs_growfs /
 xfs_growfs /var
  
