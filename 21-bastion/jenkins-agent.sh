@@ -3,12 +3,12 @@ ARCH=amd64
 PLATFORM=$(uname -s)_$ARCH
 HOME=/root
 
-lvextend -l +60%FREE /dev/RootVG/rootVol
-lvextend -l +40%FREE /dev/RootVG/varVol
-# lvextend -l +30%FREE /dev/RootVG/homeVol
+lvextend -l +40%FREE /dev/RootVG/rootVol
+lvextend -l +30%FREE /dev/RootVG/varVol
+lvextend -l +30%FREE /dev/mapper/RootVG-homeVol
 xfs_growfs /
 xfs_growfs /var
-# xfs_growfs /home
+xfs_growfs /home
  
 
 dnf -y install dnf-plugins-core
