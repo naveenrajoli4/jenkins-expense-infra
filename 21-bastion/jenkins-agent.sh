@@ -3,11 +3,25 @@ ARCH=amd64
 PLATFORM=$(uname -s)_$ARCH
 HOME=/root
 
+#resize disk from 20GB to 50GB
 growpart /dev/nvme0n1 4
-lvextend -l +50%FREE /dev/RootVG/rootVol
-lvextend -l +50%FREE /dev/RootVG/varVol
-xfs_growfs /
+
+lvextend -L +10G /dev/mapper/RootVG-homeVol
+lvextend -L +10G /dev/mapper/RootVG-varVol
+lvextend -l +100%FREE /dev/mapper/RootVG-varTmpVol
+
+xfs_growfs /home
+xfs_growfs /var/tmp
 xfs_growfs /var
+
+yum install java-17-openjdk -y
+yum install -y yum-utils
+yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+yum -y install terraform
+dnf module disable nodejs -y
+dnf module enable nodejs:20 -y
+dnf install nodejs -y
+yum install zip -y
  
 
 dnf -y install dnf-plugins-core
