@@ -5,13 +5,11 @@ resource "aws_instance" "this" {
   subnet_id              = local.public_subnet_ids
 
   # 20GB is not enough
-  root_block_device = [
-    {
-      volume_size = 50       # Size of the root volume in GB
-      volume_type = "gp3"    # General Purpose SSD (you can change it if needed)
-      delete_on_termination = true  # Automatically delete the volume when the instance is terminated
-    }
-  ]
+  root_block_device {
+    volume_size = 50  # Set root volume size to 50GB
+    volume_type = "gp3"  # Use gp3 for better performance (optional)
+    delete_on_termination = true
+  }
   user_data = file("jenkins-agent.sh")
   tags = merge(
     var.commn_tags,
